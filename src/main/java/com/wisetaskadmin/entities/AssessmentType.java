@@ -1,0 +1,8 @@
+package com.wisetaskadmin.entities;
+
+public enum AssessmentType {
+
+	ASSESSED_LAB, DEBATE, DEMO_TEACHING, FINAL_EXAM, ORAL_EXAMINATION, PORTFOLIO,
+	PRESENTATION, PROJECT, QUIZ, REPORT, SELF_REFLECTION, OTHER;
+	
+}
