@@ -36,12 +36,12 @@ class WiseTaskAdminOperationsApplicationTests {
 	public void testGetEntriesBasedOnUserId() throws Exception {
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Mockito.when(adminServices.getEntries(1)).thenReturn(Entries.builder()
-															.list(Arrays.asList((Entry.builder()
-																	.entryId(162)
-																	.entryName("Spring Semester 2022")
-																	.userId(User.builder().userId(0).build())
-																	.dateCreated(sdf.parse("2022-04-26")).build())
-															)).build());
+			.list(Arrays.asList((Entry.builder()
+			.entryId(162)
+			.entryName("Spring Semester 2022")
+			.userId(User.builder().userId(0).build())
+			.dateCreated(sdf.parse("2022-04-26")).build())
+			)).build());
 		MvcResult response = mockMvc.perform(MockMvcRequestBuilders.get("/admin/1/entries"))
 					.andExpect(MockMvcResultMatchers.status().isOk())
 					.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -56,8 +56,8 @@ class WiseTaskAdminOperationsApplicationTests {
 	@Test
 	public void testIsEntryNameUnique() throws Exception {
 		Mockito.when(adminServices.isEntryNameUnique(new HashMap<String, Object>()
-													{{put("userPK", 1);put("entry_name", "New Entry Name");
-													}})).thenReturn(true);
+			{{put("userPK", 1);put("entry_name", "New Entry Name");
+			}})).thenReturn(true);
 		Map<String, Object> requestBody = new HashMap<String, Object>() 
 										  {{put("userPK", 1);put("entry_name", "New Entry Name");}};
 		MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/admin/isEntryNameUnique")
