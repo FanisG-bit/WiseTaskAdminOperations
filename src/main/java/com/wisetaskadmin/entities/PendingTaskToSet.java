@@ -5,6 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * An entity class representing PendingTaskToSet.
+ * @author Theofanis Gkoufas
+ *
+ */
 @Data
 @Builder
 @AllArgsConstructor

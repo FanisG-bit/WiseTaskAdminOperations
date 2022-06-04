@@ -12,12 +12,27 @@ import lombok.NoArgsConstructor;
 import com.wisetaskadmin.entities.*;
 import com.wisetaskadmin.entities.Module;
 
+/**
+ * The class that is responsible for extracting the data of an excel file.
+ * @author Theofanis Gkoufas
+ *
+ */
 @Data
 @NoArgsConstructor
 public class ExcelDataExtractor {
 
+	/* A reference to the workbook that we are using for the extraction of the data.
+	   We use this object for the purpose of scanning the each excel tab, get each 
+	   tab's name etc.
+	*/
 	private XSSFWorkbook workbook;
 	
+	/**
+	 * Extracts all the data in regards to the modules, given the tab that should be
+	 * scanned.
+	 * @param tab The tab that contains the data that should be extracted.
+	 * @return A list containing all the modules that were extracted from the tab.
+	 */
 	public List<Module> getModulesList(int tab) {
 		List<Module> list = new ArrayList<>();
 		XSSFSheet customerSheet = workbook.getSheetAt(tab);
@@ -53,6 +68,15 @@ public class ExcelDataExtractor {
 		return list;
 	}
 	
+	/**
+	 * Extracts the assessments from a specific excel tab, and maps them to the corresponding modules.
+	 * This operation should take place after the process of extracting the modules from the tab. That 
+	 * way we extract the assessments and map them to their respective modules.
+	 * @param modules A list containing all the modules that were extracted on the same tab.
+	 * @param entry The entry that "owns" all the modules and the assessments that are being extracted.
+	 * @param tab The tab that we wish to scan for the purpose of extracting its data.
+	 * @return A list containing the modules with their matched assessments.
+	 */
 	public List<Module> getModulesWithAssessmentsMapped(List<Module> modules, Entry entry, int tab) {
 		List<Assessment> list = new ArrayList<>();
 		XSSFSheet customerSheet = workbook.getSheetAt(tab);
@@ -132,6 +156,12 @@ public class ExcelDataExtractor {
 		return modules;
 	}
 
+	/**
+	 * Given the type of the assessment in String data type, it returns the corresponding
+	 * enum value.
+	 * @param assessmentString The assessment type.
+	 * @return The enum value that matches the given "assessmentString".
+	 */
 	public AssessmentType mapAssessmentType(String assessmentString) {
 		AssessmentType type = null;
 		if (assessmentString.equalsIgnoreCase("Assessed Lab")) {

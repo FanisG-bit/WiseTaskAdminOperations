@@ -17,6 +17,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * An entity class representing Module.
+ * @author Theofanis Gkoufas
+ * 
+ */
 @Data
 @NoArgsConstructor
 @Entity(name = "modules")

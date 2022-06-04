@@ -23,6 +23,12 @@ import com.wisetaskadmin.controllers.AdminOperationsController;
 import com.wisetaskadmin.services.AdminServices;
 import static org.hamcrest.Matchers.*;
 
+/**
+ * Test class used for the purpose of testing a number of methods that are being provided
+ * in the REST API.
+ * @author Theofanis Gkoufas
+ *
+ */
 @WebMvcTest(controllers = AdminOperationsController.class)
 class WiseTaskAdminOperationsApplicationTests {
 	

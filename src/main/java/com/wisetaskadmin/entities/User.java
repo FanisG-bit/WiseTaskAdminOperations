@@ -19,6 +19,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * An entity class representing User.
+ * @author Theofanis Gkoufas
+ *
+ */
 @Data
 @Builder
 @NoArgsConstructor

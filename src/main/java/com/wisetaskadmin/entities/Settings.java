@@ -20,6 +20,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * An entity class representing Settings.
+ * @author Theofanis Gkoufas
+ *
+ */
 @Setter
 @Getter
 @ToString

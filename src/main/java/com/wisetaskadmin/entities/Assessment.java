@@ -20,6 +20,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * An entity class representing Assessment.
+ * @author Theofanis Gkoufas
+ *
+ */
 @Data
 @NoArgsConstructor
 @Entity(name = "assessments")

@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,6 +25,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * An entity class representing Task.
+ * @author Theofanis Gkoufas
+ *
+ */
 @Component
 @Scope("prototype")
 @Entity

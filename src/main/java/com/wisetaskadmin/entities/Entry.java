@@ -24,13 +24,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/*
- *  For this class and the Settings class, I replaced Lombok's Data annotation with Setter, Getter
- *  etc. because for some unexplained reason it kept producing a "java.lang.StackOverflowError"
- *  even though I have the @ToString.Exclude on all the required attributes (which in every 
- *  other case, it is enough to fix the problem).
-*/
-
+/**
+ * An entity class representing Entry.
+ * @author Theofanis Gkoufas
+ * 
+ * For this class and the Settings class, I replaced Lombok's Data annotation with Setter, Getter
+ * etc. because for some unexplained reason it kept producing a "java.lang.StackOverflowError"
+ * even though I have the @ToString.Exclude on all the required attributes (which in every 
+ * other case, it is enough to fix the problem).
+ */
 @Setter
 @Getter
 @ToString

@@ -7,6 +7,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * An entity class representing TaskToDo.
+ * @author Theofanis Gkoufas
+ *
+ */
 @Component
 @NoArgsConstructor
 @Builder

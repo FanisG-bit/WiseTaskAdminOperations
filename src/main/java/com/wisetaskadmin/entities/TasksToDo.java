@@ -8,6 +8,11 @@ import org.springframework.stereotype.Component;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * A class containing a list of tasks to do as its only field.
+ * @author Theofanis Gkoufas
+ *
+ */
 @Component
 @Scope("prototype")
 @NoArgsConstructor

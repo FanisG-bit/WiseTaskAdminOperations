@@ -26,6 +26,12 @@ import com.wisetaskadmin.repositories.SettingsRepository;
 import java.util.Date;
 import lombok.NoArgsConstructor;
 
+/**
+ * A service class that is being used by the admin controller and performs
+ * all the respective interactions with the database.
+ * @author Theofanis Gkoufas
+ *
+ */
 @Service
 @NoArgsConstructor
 public class AdminServices {
@@ -45,6 +51,12 @@ public class AdminServices {
 	@Autowired
 	ApplicationContext context;
 	
+	/**
+	 * Retrieves an Entries object containing a list of all the entries that belong to a
+	 * particular user, whose id is given as an argument.
+	 * @param userPK The primary key (id) of the user.
+	 * @return An Entries instance.
+	 */
 	public Entries getEntries(int userPK) {
 		DataSource ds = context.getBean("dataSource", DataSource.class);
 		Entries entries = context.getBean(Entries.class);
@@ -70,6 +82,13 @@ public class AdminServices {
 		return entries;
 	}
 	
+	/**
+	 * Checks whether an Entry name is unique, meaning it has not already been assigned to 
+	 * another entry in the database.
+	 * @param details A map that should contain two elements, having as key names; "userPK" 
+	 * and "newEntryName".
+	 * @return True or false depending whether the name is unique or not.
+	 */
 	public boolean isEntryNameUnique(Map<String, Object> details) {
 		DataSource ds = context.getBean("dataSource", DataSource.class);
 		Connection connection;
@@ -98,6 +117,12 @@ public class AdminServices {
 		return isUnique;
 	}
 	
+	/**
+	 * Adds a new entry in the database. The required information is the primary key of
+	 * the user who adds the entry, along with a name to be assigned to that entry.
+	 * @param newEntryRequiredInfo A map that should include two elements namely; "userPK"
+	 * and "newEntryName".
+	 */
 	public void addNewEntry(Map<String, Object> newEntryRequiredInfo) {
 		User user = requestUser((int) newEntryRequiredInfo.get("userPK"));
 		DataSource ds = context.getBean("dataSource", DataSource.class);
@@ -122,12 +147,24 @@ public class AdminServices {
 		}
 	}
 	
+	/**
+	 * Retrieves a user given his primary key (id).
+	 * @param id The id that belongs to a user.
+	 * @return The user whose id is the same as the one passed as a parameter.
+	 */
 	private User requestUser(int id) {
 		RestTemplate restTemplate = context.getBean(RestTemplate.class);
 		User user = restTemplate.getForObject("http://localhost:8028/users/" + id, User.class);
 		return user;
 	}
 	
+	/**
+	 * Retrieves the settings that belong to a particular entry.
+	 * @param entryID The id of the entry whose settings we want to retrieve.
+	 * @return The settings that belong to an entry.
+	 * @throws NoSuchElementException In the case that the entry id does not match to any
+	 * entry within the database, then this exception will be raised.
+	 */
 	public Settings getSettings(int entryID) throws NoSuchElementException {
 		DataSource ds = context.getBean("dataSource", DataSource.class);
 		Connection connection;
@@ -213,16 +250,18 @@ public class AdminServices {
 		return settings;
 	}
 	
-	/*
-		For some reason when updating a settings record using JPA (save method) the foreign key,
-		deletes itself (reminder that a foreign key already exists on the settings records prior
-		to this operation). That is why I use vanilla SQL knowing for sure that it works without
-		deleting the foreign key which is essential.
-		An idea for why this is happening may have to do with the fact that the individual
-		mapping on the rest controller that is calling this method should be changed regarding
-		the 'method', meaning from POST to PUT. That is because based on the rest architecture, 
-		operations about update should be denoted as PUT (whereas insert operations as POST). 
-	*/
+	/**
+	 * Uploads the settings that were inserted by the admin in the database.
+	 * For some reason when updating a settings record using JPA (save method) the foreign key, 
+	 * deletes itself (reminder that a foreign key already exists on the settings records prior 
+	 * to this operation). That is why I use vanilla SQL knowing for sure that it works without 
+	 * deleting the foreign key which is essential. 
+	 * An idea for why this is happening may have to do with the fact that the individual 
+	 * mapping on the rest controller that is calling this method should be changed regarding 
+	 * the 'method', meaning from POST to PUT. That is because based on the rest architecture, 
+	 * operations about update should be denoted as PUT (whereas insert operations as POST).
+	 * @param settings The settings that will be uploaded.
+	 */
 	public void uploadSettings(Settings settings) {
 		
 		String date = settings.getWeek1BeginDate().toString();
@@ -312,6 +351,16 @@ public class AdminServices {
 		}
 	}
 	
+	/**
+	 * Extracts excel data and upload them to the database. The data are in regards to
+	 * modules and their corresponding assessments.
+	 * @param settings The settings that have been set for the entry that will contain all
+	 * the data which will be extracted from the file.
+	 * @param excel The file whose data will be extracted.
+	 */
+	/* Retrospectively speaking, maybe I should have made this into two methods in order to
+	   be more modular, since in this method we extract the data and we upload them as well.
+	*/
 	public void extractExcelData(Settings settings, MultipartFile excel) {
 		XSSFWorkbook excelWorkBook = null;
 		try {
@@ -343,6 +392,11 @@ public class AdminServices {
 		uploadExcelData(allTabModulesWithAssessments);
 	}
 	
+	/**
+	 * Retrieves the entry Id that is stored as a foreign key in a settings record.
+	 * @param settings The setting object whose entry foreign key we want to get.
+	 * @return The entry id that was stored as a foreign key in a settings object.
+	 */
 	public int getEntryIDFK(Settings settings) {
 		DataSource ds = context.getBean("dataSource", DataSource.class);
 		Connection connection;
@@ -364,20 +418,41 @@ public class AdminServices {
 		return entryIDFK;
 	}
 	
+	/**
+	 * Retrieves an entry given an id.
+	 * @param entryID The entry id that is expected to correspond to a stored entry.
+	 * @return The entry whose primary key matches the given id.
+	 */
 	public Entry getEntryBasedOnID(int entryID) {
 		return entriesRepository.findById(entryID).get();
 	}
 	
+	/**
+	 * Upload all the modules along with their respective assessments.
+	 * @param allTabModulesWithAssessments A list containing all the modules and assessments
+	 * that were extracted from the given excel file.
+	 */
 	public void uploadExcelData(List<Module> allTabModulesWithAssessments) {
 		for(Module d : allTabModulesWithAssessments) {
 			modulesRepository.save(d);
 		}
 	}
 	
+	/**
+	 * Retrieves an assessment based on a given id.
+	 * @param assessmentID The assessment id that is expected to correspond to a stored assessment. 
+	 * @return The assessment whose primary key matches the given id.
+	 */
 	public Assessment retrieveAssessment(int assessmentID) {
 		return assessmentsRepository.findById(assessmentID).get();
 	}
 	
+	/**
+	 * Retrieves the id of the module that contains the assessment whose id is given as an
+	 * argument.
+	 * @param assessmentID The primary key of the assessment whose module we wish to find.
+	 * @return
+	 */
 	public int getModuleFKOfAssessment(int assessmentID) {
 		DataSource bean = context.getBean(DataSource.class);
 		Connection conn;
@@ -400,6 +475,12 @@ public class AdminServices {
 		return moduleFK;
 	}
 	
+	/**
+	 * Retrieves the id of the entry that "owns" the module whose id is given as an
+	 * argument.
+	 * @param moduleID The primary key of the module.
+	 * @return The id of the entry that "owns" the particular module.
+	 */
 	public int getEntryFKOfModule(int moduleID) {
 		DataSource bean = context.getBean(DataSource.class);
 		Connection conn;
@@ -422,6 +503,11 @@ public class AdminServices {
 		return entryFK;
 	}
 	
+	/**
+	 * Retrieves a module, based on a given id. 
+	 * @param moduleID The module id that is expected to correspond to a stored module.
+	 * @return The module whose primary key matches the given id.
+	 */
 	public Module retrieveModule(int moduleID) {
 		return modulesRepository.findById(moduleID).get();
 	}
